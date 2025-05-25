@@ -10,4 +10,10 @@ class QuizPreferences(context: Context) {
     }
 
     fun getScore(): Int = sharedPref.getInt("SCORE", 0)
+
+    fun saveHighScore(highScore: Int) {
+        sharedPref.edit().putInt("HIGH_SCORE", highScore).apply()
+    }
+
+    fun getHighScore(): Int = sharedPref.getInt("HIGH_SCORE", 0)
 }

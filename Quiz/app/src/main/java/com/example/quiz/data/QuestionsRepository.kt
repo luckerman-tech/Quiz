@@ -16,6 +16,12 @@ object QuestionsRepository {
             options = listOf("Java", "Python", "C++", "Kotlin"),
             correctAnswerIndex = 3
         ),
+        Question(
+            id = 3,
+            text = "gjfhg?",
+            options = listOf("q", "w", "e", "r"),
+            correctAnswerIndex = 0
+        ),
         // todo: make questions
     )
 }
