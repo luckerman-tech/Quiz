@@ -2,7 +2,9 @@ package com.example.quiz.questions.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -15,6 +17,7 @@ import com.example.quiz.data.QuestionsRepository
 import com.example.quiz.main.ui.MainActivity
 import com.example.quiz.questions.ui.preferences.QuizPreferences
 import com.example.quiz.questions.ui.view_models.QuizViewModel
+import com.example.quiz.results.ui.activities.ResultActivity
 
 class QuestionActivity : AppCompatActivity() {
     private lateinit var preferences: QuizPreferences
@@ -31,6 +34,13 @@ class QuestionActivity : AppCompatActivity() {
             }
         })[QuizViewModel::class.java]
 
+        findViewById<Button>(R.id.exitButton).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
+            finish()
+        }
+
         viewModel.currentScore.observe(this) { currentScore ->
             findViewById<TextView>(R.id.currentScoreTextView).text = "Текущий счёт: $currentScore"
         }
@@ -39,6 +49,13 @@ class QuestionActivity : AppCompatActivity() {
         val questions = QuestionsRepository.getQuestions()
         val currentQuestionIndex = questions.indexOfFirst { it.id == questionId }
         val question = questions[currentQuestionIndex]
+
+        val progressText = findViewById<TextView>(R.id.progressText)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+
+        val progress = ((currentQuestionIndex) * 100 / questions.size)
+        progressText.text = "Вопрос ${currentQuestionIndex + 1}/${questions.size}"
+        progressBar.progress = progress
 
         findViewById<TextView>(R.id.questionTextView).text = question.text
 
@@ -52,6 +69,12 @@ class QuestionActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.submitButton).setOnClickListener {
             val selectedId = radioGroup.checkedRadioButtonId
+            if (selectedId == -1) {
+                val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+                radioGroup.startAnimation(shake)
+                Toast.makeText(this, "Выберите ответ!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (selectedId == question.correctAnswerIndex) {
                 viewModel.increaseScore()
                 Toast.makeText(this, "Правильно!", Toast.LENGTH_SHORT).show()
@@ -65,12 +88,14 @@ class QuestionActivity : AppCompatActivity() {
                 intent.putExtra("QUESTION_ID", nextQuestion.id)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Викторина завершена! Счёт: ${viewModel.currentScore.value}", Toast.LENGTH_LONG).show()
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                intent.putExtra("SHOULD_UPDATE_HIGH_SCORE", true)
+                val intent = Intent(this, ResultActivity::class.java).apply {
+                    putExtra("SCORE", viewModel.currentScore.value ?: 0)
+                    putExtra("IS_NEW_RECORD", (viewModel.currentScore.value ?: 0) > (viewModel.highScore.value ?: 0))
+                    viewModel.saveResults()
+                    putExtra("HIGH_SCORE", viewModel.highScore.value ?: 0)
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
                 startActivity(intent)
-                viewModel.saveResults()
                 finish()
             }
         }

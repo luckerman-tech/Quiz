@@ -28,6 +28,11 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight">
         </activity>
+        <activity
+            android:name=".results.ui.activities.ResultActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight">
+        </activity>
     </application>
 
 </manifest>

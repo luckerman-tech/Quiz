@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/progressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Вопрос 1/10"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/ProgressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="100"
+            android:progress="0"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
@@ -32,4 +53,12 @@
         android:text="Ответить"
         android:layout_marginTop="16dp"/>
 
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выйти"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#FF0000"
+        android:textColor="#FFFFFF"/>
 </LinearLayout>

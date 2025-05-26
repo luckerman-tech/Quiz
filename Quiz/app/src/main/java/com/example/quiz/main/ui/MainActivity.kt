@@ -22,19 +22,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val preferences = QuizPreferences(this)
-        preferences.saveScore(0)
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return QuizViewModel(preferences) as T
             }
         })[QuizViewModel::class.java]
 
-        if (intent?.getBooleanExtra("SHOULD_UPDATE_HIGH_SCORE", false) == true) {
-            viewModel.loadHighScore()
-        }
-
         viewModel.highScore.observe(this) { highScore ->
             findViewById<TextView>(R.id.scoreTextView).text = "Рекорд: $highScore"
+            findViewById<TextView>(R.id.scoreTextView).animate()
+                .scaleX(1.2f)
+                .scaleY(1.2f)
+                .setDuration(300)
+                .withEndAction {
+                    findViewById<TextView>(R.id.scoreTextView).animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .duration = 300
+                }
         }
 
         findViewById<Button>(R.id.startButton).setOnClickListener {
@@ -45,6 +50,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.resetHighScore()
             Toast.makeText(this, "Рекорд сброшен!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadHighScore()
+        QuizPreferences(this).saveScore(0)
     }
 
     private fun startQuiz() {
