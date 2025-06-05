@@ -13,15 +13,30 @@ import com.example.quiz.main.ui.MainActivity
 import com.example.quiz.questions.ui.activities.QuestionActivity
 
 class ResultActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
         val score = intent.getIntExtra("SCORE", 0)
-        val highScore = intent.getIntExtra("HIGH_SCORE", 0)
+        val difficulty = intent.getStringExtra("DIFFICULTY") ?: "easy"
+
+        val difficultyName = when(difficulty) {
+            "easy" -> "лёгкий"
+            "medium" -> "средний"
+            "hard" -> "сложный"
+            else -> ""
+        }
+        //val highScore = intent.getIntExtra("HIGH_SCORE", 0)
+        val highScore = intent.getIntExtra("high_score_$difficulty", 0)
         val isNewRecord = intent.getBooleanExtra("IS_NEW_RECORD", false)
 
-        findViewById<TextView>(R.id.scoreTextView).text = "Правильных ответов: $score"
+        //findViewById<TextView>(R.id.scoreTextView).text = "Правильных ответов: $score"
+        findViewById<TextView>(R.id.scoreTextView).text = """
+            Викторина завершена!
+            Уровень: $difficultyName
+            Ваш счёт: $score
+        """.trimIndent()
 
         val highScoreText = if (isNewRecord) "⭐ Новый рекорд: $highScore ⭐" else "Рекорд: $highScore"
         findViewById<TextView>(R.id.highScoreTextView).text = highScoreText
@@ -32,15 +47,18 @@ class ResultActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.restartButton).setOnClickListener {
+            MainActivity.questions = QuestionsRepository.getQuestions(difficulty).shuffled()
             startActivity(Intent(this, QuestionActivity::class.java).apply {
-                putExtra("QUESTION_ID", QuestionsRepository.getQuestions()[0].id)
+                putExtra("QUESTION_ID", 0)
+                putExtra("DIFFICULTY", difficulty)
             })
             finish()
         }
 
         findViewById<Button>(R.id.mainMenuButton).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val intent = Intent(this, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
             startActivity(intent)
             finish()
         }

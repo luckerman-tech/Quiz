@@ -19,7 +19,6 @@
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Правильных ответов: 0"
         android:textSize="18sp"/>
 
     <TextView

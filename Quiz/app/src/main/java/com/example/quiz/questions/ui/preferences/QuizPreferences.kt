@@ -11,9 +11,9 @@ class QuizPreferences(context: Context) {
 
     fun getScore(): Int = sharedPref.getInt("SCORE", 0)
 
-    fun saveHighScore(highScore: Int) {
-        sharedPref.edit().putInt("HIGH_SCORE", highScore).apply()
+    fun saveHighScore(difficulty: String, highScore: Int) {
+        sharedPref.edit().putInt("high_score_$difficulty", highScore).apply()
     }
 
-    fun getHighScore(): Int = sharedPref.getInt("HIGH_SCORE", 0)
+    fun getHighScore(difficulty: String): Int = sharedPref.getInt("high_score_$difficulty", 0)
 }

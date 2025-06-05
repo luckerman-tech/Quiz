@@ -22,15 +22,21 @@ import com.example.quiz.results.ui.activities.ResultActivity
 class QuestionActivity : AppCompatActivity() {
     private lateinit var preferences: QuizPreferences
     private lateinit var viewModel: QuizViewModel
+    private lateinit var difficulty: String
+
+    //var questions = MainActivity.questions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question)
 
+        difficulty = intent.getStringExtra("DIFFICULTY") ?: "easy"
+        val questions = MainActivity.questions
+
         preferences = QuizPreferences(this)
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return QuizViewModel(preferences) as T
+                return QuizViewModel(preferences, difficulty) as T
             }
         })[QuizViewModel::class.java]
 
@@ -45,9 +51,7 @@ class QuestionActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.currentScoreTextView).text = "Текущий счёт: $currentScore"
         }
 
-        val questionId = intent.getIntExtra("QUESTION_ID", 0)
-        val questions = QuestionsRepository.getQuestions()
-        val currentQuestionIndex = questions.indexOfFirst { it.id == questionId }
+        val currentQuestionIndex = intent.getIntExtra("QUESTION_ID", 0)
         val question = questions[currentQuestionIndex]
 
         val progressText = findViewById<TextView>(R.id.progressText)
@@ -60,7 +64,10 @@ class QuestionActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.questionTextView).text = question.text
 
         val radioGroup = findViewById<RadioGroup>(R.id.optionsRadioGroup)
-        question.options.forEachIndexed { index, option ->
+        val correctAnswer = question.options[question.correctAnswerIndex]
+        val shuffledOptions = question.options.shuffled()
+        val shuffledAnswer = shuffledOptions.indexOf(correctAnswer)
+        shuffledOptions.forEachIndexed { index, option ->
             val radioButton = RadioButton(this)
             radioButton.id = index
             radioButton.text = option
@@ -75,24 +82,26 @@ class QuestionActivity : AppCompatActivity() {
                 Toast.makeText(this, "Выберите ответ!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (selectedId == question.correctAnswerIndex) {
-                viewModel.increaseScore()
+            if (selectedId == shuffledAnswer) {
+                viewModel.increaseScore(difficulty)
                 Toast.makeText(this, "Правильно!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Неправильно!", Toast.LENGTH_SHORT).show()
             }
 
             if (currentQuestionIndex < questions.size - 1) {
-                val nextQuestion = questions[currentQuestionIndex + 1]
-                val intent = Intent(this, QuestionActivity::class.java)
-                intent.putExtra("QUESTION_ID", nextQuestion.id)
+                val intent = Intent(this, QuestionActivity::class.java).apply {
+                    putExtra("QUESTION_ID", currentQuestionIndex + 1)
+                    putExtra("DIFFICULTY", difficulty)
+                }
                 startActivity(intent)
             } else {
                 val intent = Intent(this, ResultActivity::class.java).apply {
                     putExtra("SCORE", viewModel.currentScore.value ?: 0)
+                    putExtra("DIFFICULTY", difficulty)
                     putExtra("IS_NEW_RECORD", (viewModel.currentScore.value ?: 0) > (viewModel.highScore.value ?: 0))
-                    viewModel.saveResults()
-                    putExtra("HIGH_SCORE", viewModel.highScore.value ?: 0)
+                    viewModel.saveResults(difficulty)
+                    putExtra("high_score_$difficulty", viewModel.highScore.value ?: 0)
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 }
                 startActivity(intent)
