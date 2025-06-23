@@ -33,20 +33,6 @@ class MainActivity : AppCompatActivity() {
             }
         })[QuizViewModel::class.java]
 
-        /*viewModel.highScore.observe(this) { highScore ->
-            findViewById<TextView>(R.id.scoreTextView).text = "Рекорд: $highScore"
-            findViewById<TextView>(R.id.scoreTextView).animate()
-                .scaleX(1.2f)
-                .scaleY(1.2f)
-                .setDuration(300)
-                .withEndAction {
-                    findViewById<TextView>(R.id.scoreTextView).animate()
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .duration = 300
-                }
-        }*/
-
         findViewById<Button>(R.id.btnEasy).setOnClickListener {
             startQuiz("easy")
         }
@@ -88,18 +74,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        //viewModel.loadHighScore()
         QuizPreferences(this).saveScore(0)
         updateRecords()
     }
 
     private fun startQuiz(difficulty: String) {
         questions = QuestionsRepository.getQuestions(difficulty).shuffled()
-        /*if (questions.isNotEmpty()) {
-            val intent = Intent(this, QuestionActivity::class.java)
-            intent.putExtra("QUESTION_ID", 0)
-            startActivity(intent)
-        }*/
         val intent = Intent(this, QuestionActivity::class.java).apply {
             putExtra("QUESTION_ID", 0)
             putExtra("DIFFICULTY", difficulty)
@@ -162,6 +142,3 @@ class MainActivity : AppCompatActivity() {
         lateinit var questions: List<Question>
     }
 }
-
-/*android:backgroundTint="#FF0000"
-android:textColor="#FFFFFF"*/

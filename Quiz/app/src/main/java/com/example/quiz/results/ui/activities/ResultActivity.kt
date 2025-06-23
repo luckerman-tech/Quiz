@@ -21,22 +21,26 @@ class ResultActivity : AppCompatActivity() {
         val score = intent.getIntExtra("SCORE", 0)
         val difficulty = intent.getStringExtra("DIFFICULTY") ?: "easy"
 
+        val rightPartLevelTextView = findViewById<TextView>(R.id.rightPartLevelTextView)
+        val color = when(difficulty) {
+            "easy" -> "#4CAF50"
+            "medium" -> "#FFC107"
+            "hard" -> "#F44336"
+            else -> ""
+        }
+
         val difficultyName = when(difficulty) {
             "easy" -> "лёгкий"
             "medium" -> "средний"
             "hard" -> "сложный"
             else -> ""
         }
-        //val highScore = intent.getIntExtra("HIGH_SCORE", 0)
         val highScore = intent.getIntExtra("high_score_$difficulty", 0)
         val isNewRecord = intent.getBooleanExtra("IS_NEW_RECORD", false)
 
-        //findViewById<TextView>(R.id.scoreTextView).text = "Правильных ответов: $score"
-        findViewById<TextView>(R.id.scoreTextView).text = """
-            Викторина завершена!
-            Уровень: $difficultyName
-            Ваш счёт: $score
-        """.trimIndent()
+        rightPartLevelTextView.text = difficultyName
+        rightPartLevelTextView.setTextColor(Color.parseColor(color))
+        findViewById<TextView>(R.id.scoreTextView).text = "Ваш счёт: $score"
 
         val highScoreText = if (isNewRecord) "⭐ Новый рекорд: $highScore ⭐" else "Рекорд: $highScore"
         findViewById<TextView>(R.id.highScoreTextView).text = highScoreText

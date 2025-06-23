@@ -13,7 +13,36 @@
         android:layout_height="wrap_content"
         android:text="Результаты"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/endingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Викторина завершена!"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/leftPartLevelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Уровень: "
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/rightPartLevelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/scoreTextView"
@@ -25,9 +54,9 @@
         android:id="@+id/highScoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Рекорд: 0"
         android:textSize="18sp"
-        android:layout_marginTop="16dp"/>
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -35,12 +35,7 @@ class QuizViewModel(private val preferences: QuizPreferences, difficulty: String
         preferences.saveScore(0)
     }
 
-    /*fun loadHighScore() {
-        _highScore.value = preferences.getHighScore()
-    }*/
-
     fun resetHighScore(difficulty: String) {
-        //_highScore.value = 0
         preferences.saveHighScore(difficulty, 0)
     }
 }

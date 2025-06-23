@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.quiz.R
-import com.example.quiz.data.QuestionsRepository
 import com.example.quiz.main.ui.MainActivity
 import com.example.quiz.questions.ui.preferences.QuizPreferences
 import com.example.quiz.questions.ui.view_models.QuizViewModel
@@ -23,8 +22,6 @@ class QuestionActivity : AppCompatActivity() {
     private lateinit var preferences: QuizPreferences
     private lateinit var viewModel: QuizViewModel
     private lateinit var difficulty: String
-
-    //var questions = MainActivity.questions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
