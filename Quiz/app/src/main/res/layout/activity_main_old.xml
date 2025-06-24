@@ -4,16 +4,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center|top"
-    android:background="#EDEDED"
+    android:gravity="center"
     android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Викторина"
-        android:textSize="32sp"
-        android:textColor="@color/black"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
 
@@ -21,17 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Выберите уровень сложности:"
-        android:textColor="@color/black"
         android:textSize="18sp"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/btnEasy"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:text="Лёгкий"
-        android:textSize="24sp"
-        android:background="@drawable/button_easy_background"
+        android:textSize="18sp"
+        android:backgroundTint="#4CAF50"
         android:layout_marginBottom="8dp"/>
 
     <Button
@@ -39,26 +36,25 @@
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:text="Средний"
-        android:textSize="24sp"
+        android:textSize="18sp"
+        android:backgroundTint="#FFC107"
         android:textColor="@color/black"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/button_medium_background"/>
+        android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/btnHard"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:text="Сложный"
-        android:textSize="24sp"
-        android:background="@drawable/button_hard_background"/>
+        android:textSize="18sp"
+        android:backgroundTint="#F44336"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="Рекорды"
-        android:textSize="24sp"
-        android:textColor="@color/black"
+        android:textSize="20sp"
         android:textStyle="bold"/>
 
     <LinearLayout
@@ -73,8 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="16sp"
-            android:textColor="#000000"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/resetEasyHighScoreButton"
@@ -83,7 +78,8 @@
             android:layout_marginStart="16dp"
             android:text="Сбросить рекорд (лёгкий)"
             android:textColor="#FFFFFF"
-            android:background="@drawable/button_easy_background" />
+            android:background="@drawable/round_button"
+            android:backgroundTint="#4CAF50" />
     </LinearLayout>
 
     <LinearLayout
@@ -98,8 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="16sp"
-            android:textColor="#000000"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/resetMediumHighScoreButton"
@@ -107,8 +102,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="Сбросить рекорд (средний)"
-            android:textColor="#000000"
-            android:background="@drawable/button_medium_background" />
+            android:textColor="@color/black"
+            android:background="@drawable/round_button"
+            android:backgroundTint="#FFC107" />
     </LinearLayout>
 
     <LinearLayout
@@ -123,8 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textSize="16sp"
-            android:textColor="#000000"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/resetHardHighScoreButton"
@@ -133,7 +128,8 @@
             android:layout_marginStart="16dp"
             android:text="Сбросить рекорд (сложный)"
             android:textColor="#FFFFFF"
-            android:background="@drawable/button_hard_background" />
+            android:background="@drawable/round_button"
+            android:backgroundTint="#F44336"/>
     </LinearLayout>
 
     <Button
@@ -144,5 +140,6 @@
         android:text="Сбросить все рекорды"
         android:textColor="#FFFFFF"
         android:padding="8dp"
-        android:background="@drawable/button_grey_background" />
+        android:background="@drawable/round_button"
+        android:backgroundTint="#0000FF"/>
 </LinearLayout>

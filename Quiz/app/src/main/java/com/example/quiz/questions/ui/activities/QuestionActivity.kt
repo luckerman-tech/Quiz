@@ -1,15 +1,20 @@
 package com.example.quiz.questions.ui.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.quiz.R
@@ -17,6 +22,7 @@ import com.example.quiz.main.ui.MainActivity
 import com.example.quiz.questions.ui.preferences.QuizPreferences
 import com.example.quiz.questions.ui.view_models.QuizViewModel
 import com.example.quiz.results.ui.activities.ResultActivity
+import com.example.quiz.sounds.SoundManager
 
 class QuestionActivity : AppCompatActivity() {
     private lateinit var preferences: QuizPreferences
@@ -26,6 +32,8 @@ class QuestionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question)
+
+        soundManager = SoundManager(this)
 
         difficulty = intent.getStringExtra("DIFFICULTY") ?: "easy"
         val questions = MainActivity.questions
@@ -68,22 +76,50 @@ class QuestionActivity : AppCompatActivity() {
             val radioButton = RadioButton(this)
             radioButton.id = index
             radioButton.text = option
+            radioButton.setTextColor(Color.parseColor("#000000"))
+            radioButton.buttonTintList = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    Color.parseColor("#FF6200EE"),
+                    Color.parseColor("#000000")
+                )
+            )
             radioGroup.addView(radioButton)
         }
 
         findViewById<Button>(R.id.submitButton).setOnClickListener {
             val selectedId = radioGroup.checkedRadioButtonId
+            val toast = findViewById<TextView>(R.id.toastTextView)
+
             if (selectedId == -1) {
                 val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
                 radioGroup.startAnimation(shake)
-                Toast.makeText(this, "Выберите ответ!", Toast.LENGTH_SHORT).show()
+                toast.text = "Выберите ответ!"
+                toast.setTextColor(Color.parseColor("#FF9800"))
                 return@setOnClickListener
             }
             if (selectedId == shuffledAnswer) {
                 viewModel.increaseScore(difficulty)
-                Toast.makeText(this, "Правильно!", Toast.LENGTH_SHORT).show()
+                toast.text = "ПРАВИЛЬНО!"
+                toast.setTextColor(Color.parseColor("#FF4CAF50"))
+                findViewById<Button>(R.id.submitButton).visibility = View.GONE
+                findViewById<Button>(R.id.exitButton).visibility = View.GONE
+                radioGroup.forEach { button ->
+                    button.isEnabled = false
+                }
+                soundManager.playSound("correct")
             } else {
-                Toast.makeText(this, "Неправильно!", Toast.LENGTH_SHORT).show()
+                toast.text = "НЕПРАВИЛЬНО!"
+                toast.setTextColor(Color.parseColor("#FFFF0000"))
+                findViewById<Button>(R.id.submitButton).visibility = View.GONE
+                findViewById<Button>(R.id.exitButton).visibility = View.GONE
+                radioGroup.forEach { button ->
+                    button.isEnabled = false
+                }
+                soundManager.playSound("wrong")
             }
 
             if (currentQuestionIndex < questions.size - 1) {
@@ -91,7 +127,7 @@ class QuestionActivity : AppCompatActivity() {
                     putExtra("QUESTION_ID", currentQuestionIndex + 1)
                     putExtra("DIFFICULTY", difficulty)
                 }
-                startActivity(intent)
+                Handler(Looper.getMainLooper()).postDelayed({startActivity(intent)}, 1000)
             } else {
                 val intent = Intent(this, ResultActivity::class.java).apply {
                     putExtra("SCORE", viewModel.currentScore.value ?: 0)
@@ -101,9 +137,30 @@ class QuestionActivity : AppCompatActivity() {
                     putExtra("high_score_$difficulty", viewModel.highScore.value ?: 0)
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 }
-                startActivity(intent)
-                finish()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (intent.getBooleanExtra("IS_NEW_RECORD", false)) {
+                        soundManager.playSound("record")
+                    }
+                    else {
+                        soundManager.playSound("completed")
+                    }
+                    startActivity(intent)
+                    finish()}, 1000)
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        soundManager.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        soundManager.resume()
+    }
+
+    companion object {
+        lateinit var soundManager: SoundManager
     }
 }

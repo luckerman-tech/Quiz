@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="#EDEDED"
     android:padding="16dp">
 
     <TextView
@@ -13,8 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Результаты"
-        android:textSize="32sp"
-        android:textColor="@color/black"
+        android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginBottom="24dp"/>
 
@@ -23,45 +21,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Викторина завершена!"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:layout_marginBottom="12dp"/>
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/leftPartLevelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Уровень: "
-            android:textColor="@color/black"
-            android:textSize="24sp"/>
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/rightPartLevelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="24sp"/>
+            android:textSize="18sp"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="24sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/highScoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="24dp"/>
 
@@ -77,20 +70,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Заново"
-            android:textSize="24sp"
-            android:background="@drawable/button_grey_background"
-            android:textColor="#FFFFFF"
-            android:padding="8dp"
-            android:layout_marginEnd="32dp"/>
+            android:layout_marginEnd="16dp"/>
 
         <Button
             android:id="@+id/mainMenuButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="В меню"
-            android:textSize="24sp"
-            android:padding="8dp"
-            android:background="@drawable/button_grey_background"
-            android:textColor="#FFFFFF"/>
+            android:text="В меню"/>
     </LinearLayout>
 </LinearLayout>

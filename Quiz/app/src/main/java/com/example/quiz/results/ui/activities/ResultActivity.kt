@@ -11,8 +11,11 @@ import com.example.quiz.R
 import com.example.quiz.data.QuestionsRepository
 import com.example.quiz.main.ui.MainActivity
 import com.example.quiz.questions.ui.activities.QuestionActivity
+import com.example.quiz.sounds.SoundManager
 
 class ResultActivity : AppCompatActivity() {
+
+    private lateinit var soundManager: SoundManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +23,7 @@ class ResultActivity : AppCompatActivity() {
 
         val score = intent.getIntExtra("SCORE", 0)
         val difficulty = intent.getStringExtra("DIFFICULTY") ?: "easy"
+        soundManager = QuestionActivity.soundManager
 
         val rightPartLevelTextView = findViewById<TextView>(R.id.rightPartLevelTextView)
         val color = when(difficulty) {
@@ -66,5 +70,20 @@ class ResultActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        soundManager.release()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        soundManager.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        soundManager.resume()
     }
 }
